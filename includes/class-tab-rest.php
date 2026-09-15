@@ -28,7 +28,7 @@ final class TAB_REST {
 		$chat = isset( $m['chat']['id'] ) ? (string) $m['chat']['id'] : '';
 		$text = isset( $m['text'] ) ? sanitize_text_field( $m['text'] ) : '';
 		if ( ! $chat || ! $text ) { return; }
-		if ( 0 === strpos( $text, '/connect_' ) ) { self::connect( $chat, substr( $text, 9 ), $m ); return; }
+		if ( 0 === strpos( $text, '/start connect_' ) ) { self::connect( $chat, substr( $text, 15 ), $m ); return; }
 		$user = self::authorized_user( $chat );
 		if ( ! $user ) { TAB_Telegram::send( $chat, '⛔ Access denied. Connect from WordPress → TeleAdmin Bridge.' ); return; }
 		$lang = get_user_meta( $user->ID, 'tab_language', true ) ?: TAB_Plugin::settings()['language'];
