@@ -1,0 +1,37 @@
+=== TeleAdmin Bridge ===
+Contributors: tahanoa
+Tags: telegram, woocommerce, admin, notifications, bot
+Requires at least: 6.4
+Tested up to: 6.8
+Requires PHP: 7.4
+Stable tag: 1.0.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Secure bilingual Telegram administration for WordPress administrators, WooCommerce, and Tahanoa Invoice Links for ZarinPal.
+
+== Description ==
+
+TeleAdmin Bridge connects individual WordPress administrators to a site-specific Telegram bot. Every incoming command is checked against the administrator's current `manage_options` capability.
+
+Features include WooCommerce order notifications and recent orders, draft product creation, invoice creation with Tahanoa Invoice Links for ZarinPal, payment notifications, Persian and English menus, and a secure one-time pairing flow.
+
+No Telegram token or administrator identifier is shipped with the plugin. Data is sent to Telegram only after an administrator configures and connects a bot.
+
+== Installation ==
+
+1. Upload and activate the plugin.
+2. Create a Telegram bot using @BotFather.
+3. Open TeleAdmin in WordPress, paste the token, and save.
+4. Use the one-time Connect with Telegram button for each authorized administrator.
+
+The site must use HTTPS and its REST API must be publicly reachable by Telegram.
+
+== Security ==
+
+Webhook requests require both an unguessable URL component and Telegram's secret-token header. Updates are deduplicated. Pairing links expire after ten minutes. Only users with `manage_options` can configure, pair, or run bot actions. WooCommerce products are deliberately created as drafts.
+
+== Changelog ==
+
+= 1.0.0 =
+* Initial release.
