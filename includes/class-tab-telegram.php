@@ -30,9 +30,24 @@ final class TAB_Telegram {
 	}
 
 	public static function send( $chat_id, $text, $keyboard = null ) {
-		$body = array( 'chat_id' => (string) $chat_id, 'text' => wp_strip_all_tags( $text ), 'parse_mode' => 'HTML' );
+		$body = array( 'chat_id' => (string) $chat_id, 'text' => wp_strip_all_tags( $text ) );
 		if ( $keyboard ) { $body['reply_markup'] = wp_json_encode( $keyboard ); }
 		return self::request( 'sendMessage', $body );
+	}
+
+	public static function edit( $chat_id, $message_id, $text, $keyboard = null ) {
+		$body = array( 'chat_id'=>(string)$chat_id, 'message_id'=>absint($message_id), 'text'=>wp_strip_all_tags($text) );
+		if($keyboard)$body['reply_markup']=wp_json_encode($keyboard);
+		return self::request('editMessageText',$body);
+	}
+
+	public static function answer_callback( $id ) { return self::request('answerCallbackQuery',array('callback_query_id'=>sanitize_text_field($id))); }
+
+	public static function inline( $rows ) { return array( 'inline_keyboard'=>$rows ); }
+
+	public static function file_url( $file_id ) {
+		$file=self::request('getFile',array('file_id'=>sanitize_text_field($file_id))); if(is_wp_error($file)||empty($file['file_path']))return new WP_Error('tab_file',__('Could not retrieve the Telegram file.','teleadmin-bridge'));
+		$s=TAB_Plugin::settings(); return 'https://api.telegram.org/file/bot'.$s['bot_token'].'/'.ltrim($file['file_path'],'/');
 	}
 
 	public static function broadcast( $text ) {
@@ -44,12 +59,13 @@ final class TAB_Telegram {
 
 	public static function menu( $lang = 'fa' ) {
 		$fa = 'fa' === $lang;
-		$rows = array( array( array( 'text' => $fa ? '📊 وضعیت سایت' : '📊 Site status' ) ) );
-		if ( class_exists( 'EZINV_DB' ) ) { $rows[] = array( array( 'text' => $fa ? '🧾 صورتحساب جدید' : '🧾 New invoice' ) ); }
+		$rows = array( array( array( 'text' => $fa ? 'وضعیت سایت' : 'Site status', 'callback_data'=>'menu:status' ) ) );
 		if ( class_exists( 'WooCommerce' ) ) {
-			$rows[] = array( array( 'text' => $fa ? '📦 سفارش‌های اخیر' : '📦 Recent orders' ), array( 'text' => $fa ? '➕ محصول جدید' : '➕ New product' ) );
+			$rows[] = array( array( 'text' => $fa ? 'سفارش‌های اخیر' : 'Recent orders', 'callback_data'=>'menu:orders' ), array( 'text' => $fa ? 'محصول جدید' : 'New product', 'callback_data'=>'product:new' ) );
+			$rows[] = array( array( 'text' => $fa ? 'ویرایش محصول' : 'Edit product', 'callback_data'=>'product:edit' ) );
 		}
-		$rows[] = array( array( 'text' => $fa ? '🌐 English' : '🌐 فارسی' ) );
-		return array( 'keyboard' => $rows, 'resize_keyboard' => true );
+		if(class_exists('EZINV_DB'))$rows[]=array(array('text'=>$fa?'صورتحساب جدید':'New invoice','callback_data'=>'invoice:new'));
+		$rows[] = array( array( 'text' => $fa ? 'English' : 'فارسی', 'callback_data'=>$fa?'lang:en':'lang:fa' ) );
+		return self::inline($rows);
 	}
 }

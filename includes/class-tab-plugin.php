@@ -13,6 +13,7 @@ final class TAB_Plugin {
 	public function boot() {
 		load_plugin_textdomain( 'teleadmin-bridge', false, dirname( plugin_basename( TAB_FILE ) ) . '/languages' );
 		require_once TAB_DIR . 'includes/class-tab-telegram.php';
+		require_once TAB_DIR . 'includes/class-tab-product-flow.php';
 		require_once TAB_DIR . 'includes/class-tab-integrations.php';
 		require_once TAB_DIR . 'includes/class-tab-rest.php';
 		if ( is_admin() ) { require_once TAB_DIR . 'includes/class-tab-admin.php'; TAB_Admin::boot(); }
@@ -23,7 +24,7 @@ final class TAB_Plugin {
 	public static function settings() {
 		return wp_parse_args( (array) get_option( self::OPTION, array() ), array(
 			'bot_token' => '', 'bot_username' => '', 'secret' => '', 'language' => 'fa',
-			'notify_orders' => 1, 'notify_invoices' => 1,
+			'notify_orders' => 1, 'notify_invoices' => 1, 'delete_data' => 1,
 		) );
 	}
 
