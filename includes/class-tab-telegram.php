@@ -44,10 +44,12 @@ final class TAB_Telegram {
 
 	public static function menu( $lang = 'fa' ) {
 		$fa = 'fa' === $lang;
-		return array( 'keyboard' => array(
-			array( array( 'text' => $fa ? '📊 وضعیت سایت' : '📊 Site status' ), array( 'text' => $fa ? '🧾 صورتحساب جدید' : '🧾 New invoice' ) ),
-			array( array( 'text' => $fa ? '📦 سفارش‌های اخیر' : '📦 Recent orders' ), array( 'text' => $fa ? '➕ محصول جدید' : '➕ New product' ) ),
-			array( array( 'text' => $fa ? '🌐 English' : '🌐 فارسی' ) ),
-		), 'resize_keyboard' => true );
+		$rows = array( array( array( 'text' => $fa ? '📊 وضعیت سایت' : '📊 Site status' ) ) );
+		if ( class_exists( 'EZINV_DB' ) ) { $rows[] = array( array( 'text' => $fa ? '🧾 صورتحساب جدید' : '🧾 New invoice' ) ); }
+		if ( class_exists( 'WooCommerce' ) ) {
+			$rows[] = array( array( 'text' => $fa ? '📦 سفارش‌های اخیر' : '📦 Recent orders' ), array( 'text' => $fa ? '➕ محصول جدید' : '➕ New product' ) );
+		}
+		$rows[] = array( array( 'text' => $fa ? '🌐 English' : '🌐 فارسی' ) );
+		return array( 'keyboard' => $rows, 'resize_keyboard' => true );
 	}
 }
