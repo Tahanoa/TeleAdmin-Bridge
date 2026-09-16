@@ -4,7 +4,7 @@ Tags: telegram, woocommerce, admin, notifications, bot
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,9 @@ The site must use HTTPS and its REST API must be publicly reachable by Telegram.
 Webhook requests require both an unguessable URL component and Telegram's secret-token header. Updates are deduplicated. Pairing links expire after ten minutes. Only users with `manage_options` can configure, pair, or run bot actions. WooCommerce products are deliberately created as drafts.
 
 == Changelog ==
+
+= 1.0.1 =
+* Fixed Telegram API URL validation errors on some WordPress hosting environments.
 
 = 1.0.0 =
 * Initial release.
