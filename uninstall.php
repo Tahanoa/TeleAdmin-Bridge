@@ -8,6 +8,7 @@ if(!empty($settings['bot_token'])&&preg_match('/^\d+:[A-Za-z0-9_-]{20,}$/',$sett
 delete_option('tab_settings');
 delete_option('tab_paid_invoices');
 delete_option('tab_db_version');
+delete_option('tab_runtime_version');
 foreach(array('tab_telegram_chat_id','tab_telegram_username','tab_language','tab_admin_language','tab_flow')as$key)delete_metadata('user',0,$key,'',true);
 global $wpdb;
 $like=$wpdb->esc_like('_transient_tab_').'%';

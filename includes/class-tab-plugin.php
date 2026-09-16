@@ -19,6 +19,27 @@ final class TAB_Plugin {
 		if ( is_admin() ) { require_once TAB_DIR . 'includes/class-tab-admin.php'; TAB_Admin::boot(); }
 		TAB_REST::boot();
 		TAB_Integrations::boot();
+		add_action( 'admin_init', array( __CLASS__, 'maybe_upgrade_webhook' ), 5 );
+	}
+
+	public static function maybe_upgrade_webhook() {
+		if ( TAB_VERSION === (string) get_option( 'tab_runtime_version', '' ) ) { return; }
+		$s = self::settings();
+		if ( empty( $s['bot_token'] ) || empty( $s['secret'] ) ) {
+			update_option( 'tab_runtime_version', TAB_VERSION, false );
+			return;
+		}
+		$result = TAB_Telegram::request(
+			'setWebhook',
+			array(
+				'url'             => rest_url( 'teleadmin/v1/webhook/' . $s['secret'] ),
+				'secret_token'    => $s['secret'],
+				'allowed_updates' => wp_json_encode( array( 'message', 'callback_query' ) ),
+			)
+		);
+		if ( ! is_wp_error( $result ) ) {
+			update_option( 'tab_runtime_version', TAB_VERSION, false );
+		}
 	}
 
 	public static function settings() {
