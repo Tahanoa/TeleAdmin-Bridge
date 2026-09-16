@@ -3,7 +3,7 @@
  * Plugin Name:       TeleAdmin Bridge
  * Plugin URI:        https://github.com/Tahanoa/TeleAdmin-Bridge
  * Description:       Secure Telegram administration bridge for WordPress, WooCommerce, and Tahanoa Invoice Links for ZarinPal.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            Tahanoa
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TAB_VERSION', '1.0.0' );
+define( 'TAB_VERSION', '1.0.1' );
 define( 'TAB_FILE', __FILE__ );
 define( 'TAB_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TAB_URL', plugin_dir_url( __FILE__ ) );
