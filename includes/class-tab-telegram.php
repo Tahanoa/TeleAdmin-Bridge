@@ -7,8 +7,20 @@ final class TAB_Telegram {
 		if ( empty( $s['bot_token'] ) || ! preg_match( '/^\d+:[A-Za-z0-9_-]{20,}$/', $s['bot_token'] ) ) {
 			return new WP_Error( 'tab_token', __( 'Telegram bot token is not configured.', 'teleadmin-bridge' ) );
 		}
-		$url = 'https://api.telegram.org/bot' . rawurlencode( $s['bot_token'] ) . '/' . sanitize_key( $method );
-		$response = wp_safe_remote_post( $url, array( 'timeout' => 15, 'body' => $body ) );
+		/*
+		 * The endpoint host is fixed by the plugin and the token is validated above.
+		 * Do not URL-encode the colon in Telegram bot tokens: some WordPress hosts
+		 * reject the resulting path as an invalid URL before making the request.
+		 */
+		$url = 'https://api.telegram.org/bot' . $s['bot_token'] . '/' . sanitize_key( $method );
+		$response = wp_remote_post(
+			$url,
+			array(
+				'timeout'     => 15,
+				'redirection' => 0,
+				'body'        => $body,
+			)
+		);
 		if ( is_wp_error( $response ) ) { return $response; }
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
 		if ( 200 !== wp_remote_retrieve_response_code( $response ) || empty( $data['ok'] ) ) {
